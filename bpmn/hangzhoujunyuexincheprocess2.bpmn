@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="hangzhoujunyuexincheprocess2" name="杭州骏越新车流程配置" isExecutable="true">
+    <extensionElements>
+      <activiti:eventListener events="TASK_CREATED" delegateExpression="${noticeEventListener}"></activiti:eventListener>
+    </extensionElements>
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <userTask id="customInput" name="客户信息录入"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="customInput"></sequenceFlow>
+    <endEvent id="endevent1" name="End">
+      <extensionElements>
+        <activiti:executionListener event="end" delegateExpression="${endOrderTaskDelegate}"></activiti:executionListener>
+      </extensionElements>
+    </endEvent>
+    <userTask id="customCheck" name="客户信息审核"></userTask>
+    <sequenceFlow id="flow2" sourceRef="customInput" targetRef="customCheck"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway" default="flow5"></exclusiveGateway>
+    <sequenceFlow id="flow3" sourceRef="customCheck" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="customInput">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result==2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="inclusivegateway1"></sequenceFlow>
+    <inclusiveGateway id="inclusivegateway1" name="Exclusive Gateway"></inclusiveGateway>
+    <userTask id="managerCheck" name="总经理审核"></userTask>
+    <sequenceFlow id="flow6" sourceRef="inclusivegateway1" targetRef="managerCheck"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway" default="flow34"></exclusiveGateway>
+    <sequenceFlow id="flow7" sourceRef="managerCheck" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="exclusivegateway2" targetRef="customCheck">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${outTaskHelper.resetOutTask(execution,1)}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result==2}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="financePlayMoney" name="财务放款"></userTask>
+    <sequenceFlow id="flow9" sourceRef="exclusivegateway8" targetRef="financePlayMoney"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway3" name="Exclusive Gateway" default="flow39"></exclusiveGateway>
+    <sequenceFlow id="flow10" sourceRef="financePlayMoney" targetRef="exclusivegateway3"></sequenceFlow>
+    <sequenceFlow id="flow11" sourceRef="exclusivegateway3" targetRef="playMoneyCheck">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result==2}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="loanMaterial" name="贷后资料"></userTask>
+    <sequenceFlow id="flow24" sourceRef="inclusivegateway4" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="flow29" sourceRef="inclusivegateway1" targetRef="servicetask1"></sequenceFlow>
+    <serviceTask id="servicetask1" name="合同生成" activiti:delegateExpression="${contractDelegate}"></serviceTask>
+    <inclusiveGateway id="inclusivegateway4" name="Exclusive Gateway"></inclusiveGateway>
+    <sequenceFlow id="flow31" sourceRef="servicetask1" targetRef="inclusivegateway4"></sequenceFlow>
+    <userTask id="playMoneyCheck" name="打款申请"></userTask>
+    <sequenceFlow id="flow34" sourceRef="exclusivegateway2" targetRef="playMoneyCheck"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway8" name="Exclusive Gateway" default="flow9"></exclusiveGateway>
+    <sequenceFlow id="flow35" sourceRef="playMoneyCheck" targetRef="exclusivegateway8"></sequenceFlow>
+    <sequenceFlow id="flow36" sourceRef="exclusivegateway8" targetRef="managerCheck">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result==2}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="servicetask2" name="上牌办理" activiti:delegateExpression="${plateDelegate}"></serviceTask>
+    <sequenceFlow id="flow37" sourceRef="servicetask2" targetRef="inclusivegateway4"></sequenceFlow>
+    <sequenceFlow id="flow38" sourceRef="inclusivegateway1" targetRef="servicetask2"></sequenceFlow>
+    <sequenceFlow id="flow39" sourceRef="exclusivegateway3" targetRef="loanMaterial"></sequenceFlow>
+    <sequenceFlow id="flow40" sourceRef="repayInfoInput" targetRef="inclusivegateway4"></sequenceFlow>
+    <userTask id="repayInfoInput" name="还款信息录入"></userTask>
+    <sequenceFlow id="flow41" sourceRef="loanMaterial" targetRef="repayInfoInput"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_hangzhoujunyuexincheprocess">
+    <bpmndi:BPMNPlane bpmnElement="hangzhoujunyuexincheprocess" id="BPMNPlane_hangzhoujunyuexincheprocess">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="410.0" y="1.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="customInput" id="BPMNShape_customInput">
+        <omgdc:Bounds height="55.0" width="105.0" x="375.0" y="81.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="413.0" y="1610.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="customCheck" id="BPMNShape_customCheck">
+        <omgdc:Bounds height="55.0" width="105.0" x="375.0" y="191.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="407.0" y="301.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="inclusivegateway1" id="BPMNShape_inclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="407.0" y="411.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="managerCheck" id="BPMNShape_managerCheck">
+        <omgdc:Bounds height="55.0" width="105.0" x="375.0" y="511.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="410.0" y="640.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="financePlayMoney" id="BPMNShape_financePlayMoney">
+        <omgdc:Bounds height="55.0" width="105.0" x="375.0" y="902.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway3" id="BPMNShape_exclusivegateway3">
+        <omgdc:Bounds height="40.0" width="40.0" x="407.0" y="1042.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="loanMaterial" id="BPMNShape_loanMaterial">
+        <omgdc:Bounds height="55.0" width="105.0" x="375.0" y="1230.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="210.0" y="404.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="inclusivegateway4" id="BPMNShape_inclusivegateway4">
+        <omgdc:Bounds height="40.0" width="40.0" x="409.0" y="1500.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="playMoneyCheck" id="BPMNShape_playMoneyCheck">
+        <omgdc:Bounds height="55.0" width="105.0" x="378.0" y="730.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway8" id="BPMNShape_exclusivegateway8">
+        <omgdc:Bounds height="40.0" width="40.0" x="410.0" y="822.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="780.0" y="404.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="repayInfoInput" id="BPMNShape_repayInfoInput">
+        <omgdc:Bounds height="55.0" width="105.0" x="375.0" y="1330.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="427.0" y="36.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="81.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="427.0" y="136.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="191.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="427.0" y="246.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="301.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="447.0" y="321.0"></omgdi:waypoint>
+        <omgdi:waypoint x="596.0" y="320.0"></omgdi:waypoint>
+        <omgdi:waypoint x="596.0" y="108.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="108.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="427.0" y="341.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="411.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="427.0" y="451.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="511.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="427.0" y="566.0"></omgdi:waypoint>
+        <omgdi:waypoint x="430.0" y="640.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="450.0" y="660.0"></omgdi:waypoint>
+        <omgdi:waypoint x="702.0" y="660.0"></omgdi:waypoint>
+        <omgdi:waypoint x="702.0" y="218.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="218.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="430.0" y="862.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="902.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="427.0" y="957.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="1042.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="447.0" y="1062.0"></omgdi:waypoint>
+        <omgdi:waypoint x="624.0" y="1062.0"></omgdi:waypoint>
+        <omgdi:waypoint x="624.0" y="757.0"></omgdi:waypoint>
+        <omgdi:waypoint x="483.0" y="757.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="429.0" y="1540.0"></omgdi:waypoint>
+        <omgdi:waypoint x="430.0" y="1610.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow29" id="BPMNEdge_flow29">
+        <omgdi:waypoint x="407.0" y="431.0"></omgdi:waypoint>
+        <omgdi:waypoint x="315.0" y="431.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow31" id="BPMNEdge_flow31">
+        <omgdi:waypoint x="262.0" y="459.0"></omgdi:waypoint>
+        <omgdi:waypoint x="262.0" y="931.0"></omgdi:waypoint>
+        <omgdi:waypoint x="262.0" y="1520.0"></omgdi:waypoint>
+        <omgdi:waypoint x="409.0" y="1520.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow34" id="BPMNEdge_flow34">
+        <omgdi:waypoint x="430.0" y="680.0"></omgdi:waypoint>
+        <omgdi:waypoint x="430.0" y="730.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow35" id="BPMNEdge_flow35">
+        <omgdi:waypoint x="430.0" y="785.0"></omgdi:waypoint>
+        <omgdi:waypoint x="430.0" y="822.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow36" id="BPMNEdge_flow36">
+        <omgdi:waypoint x="450.0" y="842.0"></omgdi:waypoint>
+        <omgdi:waypoint x="556.0" y="842.0"></omgdi:waypoint>
+        <omgdi:waypoint x="556.0" y="538.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="538.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow37" id="BPMNEdge_flow37">
+        <omgdi:waypoint x="832.0" y="459.0"></omgdi:waypoint>
+        <omgdi:waypoint x="832.0" y="1520.0"></omgdi:waypoint>
+        <omgdi:waypoint x="449.0" y="1520.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow38" id="BPMNEdge_flow38">
+        <omgdi:waypoint x="447.0" y="431.0"></omgdi:waypoint>
+        <omgdi:waypoint x="780.0" y="431.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow39" id="BPMNEdge_flow39">
+        <omgdi:waypoint x="427.0" y="1082.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="1230.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow40" id="BPMNEdge_flow40">
+        <omgdi:waypoint x="427.0" y="1385.0"></omgdi:waypoint>
+        <omgdi:waypoint x="429.0" y="1500.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow41" id="BPMNEdge_flow41">
+        <omgdi:waypoint x="427.0" y="1285.0"></omgdi:waypoint>
+        <omgdi:waypoint x="427.0" y="1330.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
