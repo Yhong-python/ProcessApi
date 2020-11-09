@@ -202,10 +202,10 @@ class Test_addNewLoanProcess(object):
     def addNewProcess(self):
         processkey = get_lastest_bpmn().split("\\")[-1].split('.')[0]
         # 判断当前的processkey在机构中是否存在
-        sql = "SELECT processKey,bankId,id FROM ovf_process_info WHERE processKey='%s' AND partnerId=%d" % (
-        processkey, self.PartnerId)
+        sql = "SELECT processKey,bankId,id FROM ovf_process_info WHERE processKey='%s' AND partnerId=%d" % (processkey,self.PartnerId)
         self.log.info("执行sql语句：%s" % sql)
         self.db.excute_otherdb(sql, 'qp_itfin2_data_%d' % self.baseParentId)
+        # self.db.excute(sql)
         dbData = self.db.get_one()  # ('qizhi-test-document10', 723,53)
         # 查询合作银行名称
         # sql="SELECT id,name FROM pms_department WHERE `name`='%s' AND contactPerson='测试市' ORDER BY id DESC LIMIT 0,1" % processkey
@@ -220,7 +220,7 @@ class Test_addNewLoanProcess(object):
         print(dbData)
         print(dbData2)
 
-        if dbData2[2] != self.PartnerId:
+        if dbData2 and dbData2[2]!= self.PartnerId:
             raise Exception("流程已在该总机构下的其他机构中存在，请修改机构id并注意名称是否符合脚本要求，若不符合请修改流程文件")
 
         if dbData != None and dbData[0] == processkey and dbData2[0] == dbData[1]:

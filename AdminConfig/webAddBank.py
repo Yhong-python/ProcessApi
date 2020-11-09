@@ -92,6 +92,7 @@ class Test_Process(object):
 if __name__ == "__main__":
     a = Test_Process(534, 532)
     a.run(user='16333333333', pwd='333333')
+    # a.run(user='19999999999', pwd='999999')
     # a = Test_Process(308, 134)
     # a.run(user='18300000030', pwd='000030')
     # a = Test_Process(134, 134)

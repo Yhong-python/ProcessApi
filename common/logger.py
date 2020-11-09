@@ -29,10 +29,10 @@ class Log():
         self.logger.addHandler(self.filehandle)
 
         # 创建filehandle，用于写错误日志到文件
-        filehandle_error = logging.FileHandler(self.error_logname, encoding='utf-8')
-        filehandle_error.setLevel(level=logging.ERROR)
-        filehandle_error.formatter = self.formatter  # 格式与全部日志的相同
-        self.logger.addHandler(filehandle_error)
+        # filehandle_error = logging.FileHandler(self.error_logname, encoding='utf-8')
+        # filehandle_error.setLevel(level=logging.ERROR)
+        # filehandle_error.formatter = self.formatter  # 格式与全部日志的相同
+        # self.logger.addHandler(filehandle_error)
         # 创建一个控制台输出handle
         # self.streamhanlde=logging.StreamHandler()
         # self.streamhanlde.setLevel(level=logging.DEBUG)

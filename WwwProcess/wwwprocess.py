@@ -282,8 +282,6 @@ def completeOrder(user, pwd, processkey, basePartnerId):
 
 
 if __name__ == "__main__":
-    # completeOrder(user='16333333333',pwd='333333',processkey='qizhi-test-document12',basePartnerId=532)
-    # completeOrder(user='18833333333',pwd='333333',processkey='tailongbank改',basePartnerId=532)
+    completeOrder(user='16333333333',pwd='333333',processkey='taizong-eshare2',basePartnerId=532)
     # completeOrder(user='18300000030',pwd='000030',processkey='taizong-car',basePartnerId=134)
     # completeOrder(user='18300000010',pwd='000010',processkey='anhuijinfeng-test1',basePartnerId=134)
-    completeOrder(user='13899999999', pwd='999999', processkey='hangzhoujunyuexincheprocess', basePartnerId=532)

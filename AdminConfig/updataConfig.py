@@ -43,6 +43,22 @@ class Test_updataProcessConfig(object):
         # print(processId)
         return processId, processVersion
 
+    def updateConfigByOther(self,nowTaskId,targetTaskId,basePartnerId):
+        apiUrl='adminApi/scenesConfig/updateConfigByOther'
+        data={
+            'taskType': 1,#场景类型（1：原流程场景；2：其他场景）
+            'taskId': nowTaskId,#自己的taskid
+            'otherTaskId': targetTaskId,#从目标场景加载配置的id
+            'basePartnerId': basePartnerId,
+            'isTab': 1,
+            'isField': 1,
+            'isBtn': 1
+        }
+        r = self.base.sendRequest(apiUrl, 'post', data=data)
+        print('从其他场景加载配置结果：',r.json())
+        self.log.info(r.json())
+        assert r.json()['code'] == 200, "从其他场景加载配置失败"
+
     def getProcessScenesList(self):
         # 查询当前流程文件中所有的场景
         selectProcessSceneApi = 'adminApi/scenesConfigMessage/selectProcessScene'
@@ -56,10 +72,13 @@ class Test_updataProcessConfig(object):
         assert r.json()['code'] == 200, "请求失败"
         print("当前流程文件中所有场景获取成功")
         self.log.info("当前流程文件中所有场景获取成功")
+        sceneId_list=[i['id'] for i in r.json()['processScenesList']] #场景id的列表
         # print(r.text)
 
         # 加载每一个场景的场景配置
         for i in r.json()['processScenesList']:
+            global target_id
+            target_id=i['id']#第一个进行配置的流程id
             self.log.info("当前场景为:%s" % i['taskName'])
             taskName = i['taskName']
             loadConfigApi = 'adminApi/scenesConfig/loadConfig'
@@ -145,10 +164,17 @@ class Test_updataProcessConfig(object):
                 # return r
             print("场景:" + taskName + '字段配置成功')
             self.log.info("场景:" + taskName + '字段配置成功')
+            break
+
+        #从其他场景加载
+        if target_id in sceneId_list:
+            sceneId_list.remove(target_id)
+            for i in sceneId_list:
+                self.updateConfigByOther(i,target_id,self.baseParentId)
         print('贷款流程场景配置成功')
 
 
 if __name__ == "__main__":
     # a=Test_updataProcessConfig(processKey='qizhi-test-document10',baseParentId=532)
-    a = Test_updataProcessConfig(processKey='anhuijinfeng-test1', baseParentId=134)
+    a = Test_updataProcessConfig(processKey='qinxiachefu20', baseParentId=532)
     result = a.getProcessScenesList()
