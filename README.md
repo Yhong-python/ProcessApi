@@ -11,5 +11,3 @@
   目前业务类型也已写死为：接口自动化，可以修改文件中的第41行name（业务类型名称）,44行productType（业务类型id）
 4.纯接口实现的流程节点自动化可以执行/WwwProcess/wwwprocess.py
   传参user,pwd,processkey,basePartnerId
-
-5.修改
